@@ -1,26 +1,8 @@
-﻿import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Product } from '@/types';
+﻿import React, { createContext, useContext, useReducer } from 'react';
 
-interface ProductState {
-  products: Product[];
-  isLoading: boolean;
-  error: string | null;
-}
+const ProductContext = createContext(undefined);
 
-interface ProductContextType extends ProductState {
-  setProducts: (products: Product[]) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-}
-
-const ProductContext = createContext<ProductContextType | undefined>(undefined);
-
-type ProductAction =
-  | { type: 'SET_PRODUCTS'; payload: Product[] }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null };
-
-const productReducer = (state: ProductState, action: ProductAction): ProductState => {
+const productReducer = (state, action) => {
   switch (action.type) {
     case 'SET_PRODUCTS':
       return {
@@ -42,28 +24,28 @@ const productReducer = (state: ProductState, action: ProductAction): ProductStat
   }
 };
 
-const initialState: ProductState = {
+const initialState = {
   products: [],
   isLoading: false,
   error: null,
 };
 
-export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ProductProvider = ({ children }) => {
   const [state, dispatch] = useReducer(productReducer, initialState);
 
-  const setProducts = (products: Product[]) => {
+  const setProducts = (products) => {
     dispatch({ type: 'SET_PRODUCTS', payload: products });
   };
 
-  const setLoading = (loading: boolean) => {
+  const setLoading = (loading) => {
     dispatch({ type: 'SET_LOADING', payload: loading });
   };
 
-  const setError = (error: string | null) => {
+  const setError = (error) => {
     dispatch({ type: 'SET_ERROR', payload: error });
   };
 
-  const value: ProductContextType = {
+  const value = {
     ...state,
     setProducts,
     setLoading,
@@ -73,7 +55,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };
 
-export const useProduct = (): ProductContextType => {
+export const useProduct = () => {
   const context = useContext(ProductContext);
   if (context === undefined) {
     throw new Error('useProduct must be used within a ProductProvider');

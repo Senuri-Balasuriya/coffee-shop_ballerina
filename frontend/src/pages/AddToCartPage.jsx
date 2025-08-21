@@ -8,7 +8,7 @@ const initialCart = [
 export default function AddToCartPage() {
   const [cart, setCart] = useState(initialCart);
 
-  const updateQuantity = (idx: number, qty: number) => {
+  const updateQuantity = (idx, qty) => {
     setCart(cart =>
       cart.map((item, i) =>
         i === idx ? { ...item, quantity: qty > 0 ? qty : 1 } : item
@@ -16,7 +16,7 @@ export default function AddToCartPage() {
     );
   };
 
-  const removeItem = (idx: number) => {
+  const removeItem = (idx) => {
     setCart(cart => cart.filter((_, i) => i !== idx));
   };
 

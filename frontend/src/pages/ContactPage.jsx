@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const ContactPage: React.FC = () => {
+const ContactPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-coffee-texture">
       <h1 className="text-4xl font-bold mb-4 text-coffee">Contact Us</h1>

@@ -1,22 +1,8 @@
-﻿import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { User, AuthState } from '@/types';
+﻿import React, { createContext, useContext, useReducer } from 'react';
 
-interface AuthContextType extends AuthState {
-  login: (user: User) => void;
-  logout: () => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-}
+const AuthContext = createContext(undefined);
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-type AuthAction =
-  | { type: 'LOGIN'; payload: User }
-  | { type: 'LOGOUT' }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null };
-
-const authReducer = (state: AuthState, action: AuthAction): AuthState => {
+const authReducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN':
       return {
@@ -47,17 +33,17 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-const initialState: AuthState = {
+const initialState = {
   user: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
 };
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = (user: User) => {
+  const login = (user) => {
     dispatch({ type: 'LOGIN', payload: user });
   };
 
@@ -65,15 +51,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     dispatch({ type: 'LOGOUT' });
   };
 
-  const setLoading = (loading: boolean) => {
+  const setLoading = (loading) => {
     dispatch({ type: 'SET_LOADING', payload: loading });
   };
 
-  const setError = (error: string | null) => {
+  const setError = (error) => {
     dispatch({ type: 'SET_ERROR', payload: error });
   };
 
-  const value: AuthContextType = {
+  const value = {
     ...state,
     login,
     logout,
@@ -84,7 +70,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');

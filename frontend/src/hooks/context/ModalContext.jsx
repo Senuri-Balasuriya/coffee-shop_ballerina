@@ -1,18 +1,8 @@
-﻿import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { ModalState } from '@/types';
+﻿import React, { createContext, useContext, useReducer } from 'react';
 
-interface ModalContextType extends ModalState {
-  openModal: (type: string, data?: any) => void;
-  closeModal: () => void;
-}
+const ModalContext = createContext(undefined);
 
-const ModalContext = createContext<ModalContextType | undefined>(undefined);
-
-type ModalAction =
-  | { type: 'OPEN_MODAL'; payload: { type: string; data?: any } }
-  | { type: 'CLOSE_MODAL' };
-
-const modalReducer = (state: ModalState, action: ModalAction): ModalState => {
+const modalReducer = (state, action) => {
   switch (action.type) {
     case 'OPEN_MODAL':
       return {
@@ -33,16 +23,16 @@ const modalReducer = (state: ModalState, action: ModalAction): ModalState => {
   }
 };
 
-const initialState: ModalState = {
+const initialState = {
   isOpen: false,
   type: null,
   data: undefined,
 };
 
-export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ModalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(modalReducer, initialState);
 
-  const openModal = (type: string, data?: any) => {
+  const openModal = (type, data) => {
     dispatch({ type: 'OPEN_MODAL', payload: { type, data } });
   };
 
@@ -50,7 +40,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     dispatch({ type: 'CLOSE_MODAL' });
   };
 
-  const value: ModalContextType = {
+  const value = {
     ...state,
     openModal,
     closeModal,
@@ -59,7 +49,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 };
 
-export const useModal = (): ModalContextType => {
+export const useModal = () => {
   const context = useContext(ModalContext);
   if (context === undefined) {
     throw new Error('useModal must be used within a ModalProvider');
