@@ -6,3 +6,21 @@ distribution = "2201.10.1"
 
 [build-options]
 observabilityIncluded = true
+
+[[platform.java11.dependency]]
+groupId = "com.microsoft.sqlserver"
+artifactId = "mssql-jdbc"
+version = "11.2.2.jre11"
+
+
+[dependencies]
+"ballerinax/mssql" = "1.1.1"
+
+
+
+[[platform.java17.dependency]]
+groupId = "io.ballerina.stdlib"
+artifactId = "persist.sql-native"
+version = "1.4.0"
+
+
